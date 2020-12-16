@@ -62,37 +62,16 @@ def sampleTest():
     args.gpu = -1
     encdec = VAE(args)
     epoch = input("input epoch >> ")
-    model_name = "./{}/models/aibirds_word_aibirds_word_{}_10".format(dir_name, epoch)
+    model_name = "./{}/models/aibirds_word_aibirds_word_{}_60".format(dir_name, epoch)
     encdec = test(args, encdec, model_name)
     deconverter = txt2xml.txt2xml()
     os.makedirs("make_levels",exist_ok=True)
     sample_size = int(input("input sample_size >> "))
-    uni_gram = {}
-    bi_gram = {}
     for i in range(sample_size):
         tenti = testDec(args, encdec, 1)
-        uni_gram, bi_gram = bi_uni(uni_gram, bi_gram, tenti)
         text = deconverter.vector2xml(tenti[0])
         with open("make_levels/level-" + str(i) + ".xml", "w") as f:
             f.write(text)
-    print("uni", len(sorted(uni_gram.items(), key=lambda x: x[1])))
-    print("bi", len(sorted(bi_gram.items(), key=lambda x: x[1]))) 
-
-def bi_uni(uni_gram, bi_gram, tenti):
-    for data in tenti:
-        old_line = ""
-        for word in data:
-            if word in uni_gram.keys():
-                 uni_gram[word] += 1
-            else:
-                uni_gram[word] = 1
-            concat_line = old_line + word
-            if concat_line in bi_gram.keys():
-                bi_gram[concat_line] += 1
-            else:
-                bi_gram[concat_line] = 1
-            old_line = word
-    return uni_gram, bi_gram
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process some integers.')
