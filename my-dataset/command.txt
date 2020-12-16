@@ -1,0 +1,2 @@
+ファイル名一括変更
+ls -v | cat -n | while read n f; do mv -n "$f" "$n.xml"; done 
